@@ -15,10 +15,11 @@ import Modelo.TempCiudad;
 
 public class HerramientaTemp {
 
+    // metodo para obtener datos desde un archivo CSV
     public static List<TempCiudad> getDatos(String nombreArchivo) {
         DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         try (Stream<String> lineas = Files.lines(Paths.get(nombreArchivo))) {
-           
+
             return lineas.skip(1)
                     .map(linea -> linea.split(","))
                     .map(texto -> new TempCiudad(texto[0], LocalDate.parse(texto[1], formatoFecha),
@@ -32,6 +33,7 @@ public class HerramientaTemp {
 
     }
 
+    // metodo para obtener lista de ciudades sin repeticiones
     public static List<String> getClimas(List<TempCiudad> datosTemperatura) {
         return datosTemperatura.stream()
                 .map(TempCiudad::getCiudad)
@@ -39,6 +41,7 @@ public class HerramientaTemp {
                 .collect(Collectors.toList());
     }
 
+    // metodo filtro por ciudad y rango de fechas
     public static List<TempCiudad> filtro(List<TempCiudad> rangos, String ciudad, LocalDate inicio, LocalDate fin) {
         return rangos.stream()
                 .filter(item -> item.getCiudad().equals(ciudad) &&
@@ -47,6 +50,7 @@ public class HerramientaTemp {
                 .collect(Collectors.toList());
     }
 
+    // calculador de promedios por ciudad en un rango de fechas
     public static Map<String, Double> calcularPromediosPorCiudad(List<TempCiudad> datos,
             LocalDate inicio,
             LocalDate fin) {
@@ -55,10 +59,10 @@ public class HerramientaTemp {
                 .filter(temp -> !temp.getFecha().isBefore(inicio) &&
                         !temp.getFecha().isAfter(fin))
                 .collect(Collectors.toList());
-        
+
         // Verificar si hay datos para ese rango de fechas
         if (datosFiltrados.isEmpty()) {
-            return Collections.emptyMap(); // IUclima ya maneja el caso de mapa vacío
+            return Collections.emptyMap(); // IUclima ya maneja el caso de mapa vacio
         }
 
         // Calcular promedios si hay datos
@@ -68,31 +72,33 @@ public class HerramientaTemp {
                         Collectors.averagingDouble(TempCiudad::getTemperatura)));
     }
 
+    // metodo para obtener ciudades con maxima y minima temperatura en una fecha
+    // dada
     public static Map<String, String> obtenerCiudadesExtremas(List<TempCiudad> datos,
             LocalDate fecha) {
-        // Filtrar solo los registros de esa fecha
+        // filtrar solo los registros de esa fecha
         List<TempCiudad> datosFecha = datos.stream()
                 .filter(temp -> temp.getFecha().isEqual(fecha))
                 .collect(Collectors.toList());
 
-        // Verificar si hay datos para esa fecha
+        // verificar si hay datos para esa fecha
         if (datosFecha.isEmpty()) {
             return Map.of("error", "No hay datos disponibles para esa fecha");
         }
 
-        // Encontrar la temperatura máxima y ciudad correspondiente
+        // encontrar la temperatura máxima y ciudad correspondiente
         TempCiudad masCalurosa = datosFecha.stream()
                 .max(Comparator.comparingDouble(TempCiudad::getTemperatura))
                 .orElse(null);
 
-        // Encontrar la temperatura mínima y ciudad correspondiente
+        // encontrar la temperatura mínima y ciudad correspondiente
         TempCiudad menosCalurosa = datosFecha.stream()
                 .min(Comparator.comparingDouble(TempCiudad::getTemperatura))
                 .orElse(null);
 
-        // Retornar resultados
+        // retornar resultados
         return Map.of(
                 "masCalurosa", masCalurosa.getCiudad() + " (" + masCalurosa.getTemperatura() + "°C)",
                 "menosCalurosa", menosCalurosa.getCiudad() + " (" + menosCalurosa.getTemperatura() + "°C)");
-    } 
+    }
 }

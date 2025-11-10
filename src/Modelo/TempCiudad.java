@@ -1,5 +1,6 @@
 package Modelo;
-import java.time.LocalDate; 
+
+import java.time.LocalDate;
 
 public class TempCiudad {
 
@@ -36,7 +37,4 @@ public class TempCiudad {
     public void setTemperatura(double temperatura) {
         Temperatura = temperatura;
     }
-
-    
-    
 }
