@@ -17,9 +17,8 @@ public class HerramientaTemp {
 
     public static List<TempCiudad> getDatos(String nombreArchivo) {
         DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        try {
-            Stream<String> lineas = Files.lines(Paths.get(nombreArchivo));
-
+        try (Stream<String> lineas = Files.lines(Paths.get(nombreArchivo))) {
+           
             return lineas.skip(1)
                     .map(linea -> linea.split(","))
                     .map(texto -> new TempCiudad(texto[0], LocalDate.parse(texto[1], formatoFecha),
@@ -69,12 +68,6 @@ public class HerramientaTemp {
                         Collectors.averagingDouble(TempCiudad::getTemperatura)));
     }
 
-    public static void mostrarGrafica(Map<String, Double> promedios) {
-        promedios.forEach((ciudad, promedio) -> {
-            System.out.println("Ciudad: " + ciudad + ", Promedio de Temperatura: " + promedio);
-        });
-    }
-
     public static Map<String, String> obtenerCiudadesExtremas(List<TempCiudad> datos,
             LocalDate fecha) {
         // Filtrar solo los registros de esa fecha
@@ -101,45 +94,5 @@ public class HerramientaTemp {
         return Map.of(
                 "masCalurosa", masCalurosa.getCiudad() + " (" + masCalurosa.getTemperatura() + "°C)",
                 "menosCalurosa", menosCalurosa.getCiudad() + " (" + menosCalurosa.getTemperatura() + "°C)");
-    }
-
- //  public static double getPromedio(List<Double> datillo) {
- //      return datillo.isEmpty() ? 0
- //              : datillo.stream()
- //                      .mapToDouble(Double::doubleValue)
- //                      .average()
- //                      .orElse(0);
- //  }
-
- //  public static double getMaximo(List<Double> datillo) {
- //      return datillo.isEmpty() ? 0
- //              : datillo.stream()
- //                      .mapToDouble(Double::doubleValue)
- //                      .max()
- //                      .orElse(0);
- //  }
-
- //  public static double getMinimo(List<Double> datillo) {
- //      return datillo.isEmpty() ? 0
- //              : datillo.stream()
- //                      .mapToDouble(Double::doubleValue)
- //                      .min()
- //                      .orElse(0);
- //  }
-
- //  public static Map<String, Double> getEstadistica(List<TempCiudad> datosTemperatura, String ciudad,
- //          LocalDate inicio, LocalDate fin) {
-
- //      var datosFiltrados = filtro(datosTemperatura, ciudad, inicio, fin);
- //      var rangos = datosFiltrados.stream()
- //              .map(TempCiudad::getTemperatura)
- //              .collect(Collectors.toList());
-
- //      Map<String, Double> estadisticas = Map.of(
- //              "Promedio", getPromedio(rangos),
- //              "Maximo", getMaximo(rangos),
- //              "Minimo", getMinimo(rangos));
-
- //      return estadisticas;
- //  }
+    } 
 }

@@ -1,15 +1,15 @@
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.border.Border;
-
+import java.util.stream.Collectors;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.Calendar;
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+
 import java.awt.*;
-import java.util.Map;
+ 
 
 import Modelo.TempCiudad;
 import Servicios.HerramientaTemp;
@@ -34,7 +34,8 @@ public class IUclima extends JFrame {
         JToolBar barraHerramientas = new JToolBar();
         IUclima.this.add(barraHerramientas);
         barraHerramientas.setBackground(Color.LIGHT_GRAY);
-        // Configurar layout con espaciado horizontal (15) y vertical (10)
+        barraHerramientas.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1));
+        // Configurar layout con espaciado horizontal 
         barraHerramientas.setLayout(new FlowLayout(FlowLayout.LEADING, 15, 27));
         barraHerramientas.setPreferredSize(new Dimension(850, 110));
         barraHerramientas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
@@ -42,19 +43,20 @@ public class IUclima extends JFrame {
         
         // Panel para agrupar botones
         JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.LEADING, 10, 5));
-        panelBotones.setOpaque(false ); // Hacer transparente para que se vea el fondo del toolbar
+        panelBotones.setOpaque(false ); // Hacer transparente 
         
         // Configurar botón de promedios con texto centrado
         JButton botonPromedio = new JButton("<html><center>Graficar Barras<br>De<br>Promedios</center></html>");
         botonPromedio.setToolTipText("Muestra la grafica de promedios");
         botonPromedio.setPreferredSize(new Dimension(150, 60));
-        botonPromedio.setFont(new Font("Arial", Font.BOLD, 12));
+        botonPromedio.setFont(new Font("ITALIC", Font.BOLD, 13));
+        botonPromedio.setBackground(Color.orange);
         botonPromedio.setHorizontalTextPosition(SwingConstants.CENTER);
         botonPromedio.setVerticalTextPosition(SwingConstants.CENTER);
         botonPromedio.setAlignmentX(Component.CENTER_ALIGNMENT);
         botonPromedio.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.BLACK, 3),
-            BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+            BorderFactory.createLineBorder(Color.BLACK, 3, true),
+            BorderFactory.createEmptyBorder(5, 10, 5, 5)));
 
         botonPromedio.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -96,8 +98,8 @@ public class IUclima extends JFrame {
                         dibujarGraficaBarras(g, promedios, fechaInicio, fechaFin);
                     }
                 };
-                panelBarras.setPreferredSize(new Dimension(800, 500));
-                panelBarras.setBackground(Color.WHITE);
+                panelBarras.setPreferredSize(new Dimension(800, 500)); 
+                panelBarras.setBackground(Color.LIGHT_GRAY);
 
                 // Agregar a pestaña
                 panelGrafica.addTab("Gráfica de Promedios", panelBarras);
@@ -117,12 +119,13 @@ public class IUclima extends JFrame {
         JButton botonmaxmin = new JButton("<html><center>Máximos y Mínimos<br>de<br> Temperaturas</center></html>");
         botonmaxmin.setToolTipText("Ciudades con máximos y mínimos");
         botonmaxmin.setPreferredSize(new Dimension(150, 60));
-        botonmaxmin.setFont(new Font("Arial", Font.BOLD, 12));
+        botonmaxmin.setFont(new Font("ITALIC", Font.BOLD, 13));
+        botonmaxmin.setBackground(Color.cyan);
         botonmaxmin.setHorizontalTextPosition(SwingConstants.CENTER);
         botonmaxmin.setVerticalTextPosition(SwingConstants.CENTER);
         botonmaxmin.setAlignmentX(Component.CENTER_ALIGNMENT);
         botonmaxmin.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.BLACK, 3),
+            BorderFactory.createLineBorder(Color.BLACK, 4, true),
             BorderFactory.createEmptyBorder(5, 10, 5, 10)));
 
         botonmaxmin.addActionListener(new ActionListener() {
@@ -152,6 +155,7 @@ public class IUclima extends JFrame {
 
                 // Crear panel
                 JPanel panelMaxMin = crearPanelMaxMin(extremas, fecha);
+                panelMaxMin.setBackground(Color.LIGHT_GRAY);
 
                 // Agregar a pestaña
                 panelGrafica.addTab("Máximos y Mínimos - " + fecha, panelMaxMin);
@@ -168,15 +172,16 @@ public class IUclima extends JFrame {
         // Panel para agrupar fechas
         JPanel panelFechas = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
         panelFechas.setOpaque(true);
+        panelFechas.setBorder(BorderFactory.createLineBorder(Color.darkGray, 4, true));
 
         // Configurar etiquetas y selectores de fecha con alineación
         JLabel etiquetaFechaDesde = new JLabel("Fecha Desde:", SwingConstants.CENTER);
-        etiquetaFechaDesde.setFont(new Font("Arial", Font.BOLD, 14));
+        etiquetaFechaDesde.setFont(new Font("Monospaced", Font.BOLD, 14));
         etiquetaFechaDesde.setHorizontalAlignment(SwingConstants.CENTER);
         etiquetaFechaDesde.setVerticalAlignment(SwingConstants.CENTER);
         panelFechas.add(etiquetaFechaDesde);
 
-        // Configurar DateChooserCombo Desde
+        // Configurar   Desde
         dccDesde = new DateChooserCombo();
         dccDesde.setPreferredSize(new Dimension(120, 30));
         panelFechas.add(dccDesde);
@@ -185,14 +190,14 @@ public class IUclima extends JFrame {
         panelFechas.add(Box.createHorizontalStrut(20));
 
         JLabel etiquetaFechaHasta = new JLabel("Fecha Hasta:", SwingConstants.CENTER);
-        etiquetaFechaHasta.setFont(new Font("Arial", Font.BOLD, 14));
+        etiquetaFechaHasta.setFont(new Font("Monospaced", Font.BOLD, 14));
         etiquetaFechaHasta.setHorizontalAlignment(SwingConstants.CENTER);
         etiquetaFechaHasta.setVerticalAlignment(SwingConstants.CENTER);
         panelFechas.add(etiquetaFechaHasta);
 
-        // Configurar DateChooserCombo Hasta
+        // Configurar   Hasta
         dccHasta = new DateChooserCombo();
-        dccHasta.setPreferredSize(new Dimension(120, 30));
+        dccHasta.setPreferredSize(new Dimension(120, 30));  
         panelFechas.add(dccHasta);
 
         barraHerramientas.add(panelFechas);
@@ -200,10 +205,14 @@ public class IUclima extends JFrame {
 
         JPanel contenedorGrafica = new JPanel();
         contenedorGrafica.setLayout(new BoxLayout(contenedorGrafica, BoxLayout.Y_AXIS));
-        contenedorGrafica.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        panelGrafica = new JTabbedPane();
-        panelGrafica.setBorder(BorderFactory.createTitledBorder("Graficas de temperatura"));
+        contenedorGrafica.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); 
+          
+        panelGrafica = new JTabbedPane(); 
+        panelGrafica.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder( "Graficas  ") ,  
+                BorderFactory.createLineBorder(Color.DARK_GRAY, 5, true))); 
+        panelGrafica.setOpaque(true);
+        panelGrafica.setBackground(Color.LIGHT_GRAY);          
 
         contenedorGrafica.add(panelGrafica);
 
@@ -224,92 +233,100 @@ public class IUclima extends JFrame {
     }
 
     private void dibujarGraficaBarras(Graphics g, Map<String, Double> datos,
-            LocalDate inicio, LocalDate fin) {
-        if (datos == null || datos.isEmpty()) {
-            g.setFont(new Font("Arial", Font.BOLD, 16));         
-            g.setColor(Color.RED);
-            g.drawString("No hay datos para mostrar", 330, 35);
-            return;
-        }
-
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-
-        // Título
-        g2d.setFont(new Font("Arial", Font.BOLD, 18));
-        g2d.setColor(Color.BLACK);
-        String titulo = String.format("Promedios de Temperatura (%s a %s)", inicio, fin);
-        g2d.drawString(titulo, 20, 30);
-
-        // Encontrar temperatura máxima
-        double maxTemp = datos.values().stream()
-                .max(Double::compare)
-                .orElse(1.0);
-
-        // Configuración
-        int margenIzq = 100;
-        int margenTop = 80;
-        int anchoBarra = 80;
-        int espacioEntre = 50;
-        int alturaMaxima = 400; // Altura fija para las barras
-
-        int x = margenIzq;
-        int index = 0;
-
-        // Colores
-        Color[] colores = {
-                new Color(52, 152, 219), // Azul
-                new Color(231, 76, 60), // Rojo
-                new Color(46, 204, 113) // Verde
-        };
-
-        // Dibujar cada barra
-        for (Map.Entry<String, Double> entrada : datos.entrySet()) {
-            String ciudad = entrada.getKey();
-            double temperatura = entrada.getValue();
-
-            // Calcular altura de la barra
-            int alturaBarra = (int) ((temperatura / maxTemp) * alturaMaxima);
-            int y = 500 - alturaBarra; // 500 es la línea base
-
-            // Dibujar barra
-            Color colorBarra = colores[index % colores.length];
-            g2d.setColor(colorBarra);
-            g2d.fillRect(x, y, anchoBarra, alturaBarra);
-
-            // Borde
-            g2d.setColor(Color.BLACK);
-            g2d.drawRect(x, y, anchoBarra, alturaBarra);
-
-            // Valor encima
-            g2d.setFont(new Font("Arial", Font.BOLD, 12));
-            String tempStr = String.format("%.2f°C", temperatura);
-            FontMetrics fm = g2d.getFontMetrics();
-            int anchoTexto = fm.stringWidth(tempStr);
-            g2d.drawString(tempStr, x + (anchoBarra - anchoTexto) / 2, y - 5);
-
-            // Nombre de ciudad
-            g2d.setFont(new Font("Arial", Font.PLAIN, 12));
-            fm = g2d.getFontMetrics();
-            anchoTexto = fm.stringWidth(ciudad);
-            g2d.drawString(ciudad, x + (anchoBarra - anchoTexto) / 2, 520);
-
-            x += anchoBarra + espacioEntre;
-            index++;
-        }
-
-        // Línea base
-        g2d.setColor(Color.BLACK);
-        g2d.setStroke(new BasicStroke(2));
-        g2d.drawLine(margenIzq - 10, 500, 700, 500);
+        LocalDate inicio, LocalDate fin) {
+    if (datos == null || datos.isEmpty()) {
+        g.setFont(new Font("Arial", Font.BOLD, 16));         
+        g.setColor(Color.RED);
+        g.drawString("No hay datos para mostrar", 330, 35);
+        return;
     }
+
+    Graphics2D g2d = (Graphics2D) g;
+    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+            RenderingHints.VALUE_ANTIALIAS_ON);
+
+    // Título
+    g2d.setFont(new Font("Arial", Font.BOLD, 18));
+    g2d.setColor(Color.BLACK);
+    String titulo = String.format("Promedios de Temperatura (De  %s  a  %s)", inicio, fin);
+    g2d.drawString(titulo, 20, 30);
+
+    // Encontrar temperatura máxima
+    double maxTemp = datos.values().stream()
+            .max(Double::compare)
+            .orElse(1.0);
+
+    // Configuración
+    int margenIzq = 100;
+    int margenTop = 80;
+    int anchoBarra = 80;
+    int espacioEntre = 50;
+    int alturaMaxima = 400;
+
+    int x = margenIzq;
+    int index = 0;
+
+    // Colores
+    Color[] colores = {
+            new Color(52, 152, 219),   // Azul
+            new Color(231, 76, 60),    // Rojo
+            new Color(46, 204, 113),   // Verde
+            new Color(155, 89, 182),   // Morado
+            new Color(241, 196, 15)    // Amarillo
+    };
+
+    // ===== ORDENAR DE MAYOR A MENOR =====
+    List<Map.Entry<String, Double>> entradasOrdenadas = datos.entrySet().stream()
+            .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+            .collect(Collectors.toList());
+
+    // Dibujar cada barra
+    for (Map.Entry<String, Double> entrada : entradasOrdenadas) {
+        String ciudad = entrada.getKey();
+        double temperatura = entrada.getValue();
+
+        // Calcular altura de la barra
+        int alturaBarra = (int) ((temperatura / maxTemp) * alturaMaxima);
+        int y = 500 - alturaBarra;
+
+        // Dibujar barra
+        Color colorBarra = colores[index % colores.length];
+        g2d.setColor(colorBarra);
+        g2d.fillRect(x, y, anchoBarra, alturaBarra);
+
+        // Borde
+        g2d.setColor(Color.BLACK);
+        g2d.drawRect(x, y, anchoBarra, alturaBarra);
+
+        // Valor encima
+        g2d.setFont(new Font("Arial", Font.BOLD, 12));
+        String tempStr = String.format("%.2f°C", temperatura);
+        FontMetrics fm = g2d.getFontMetrics();
+        int anchoTexto = fm.stringWidth(tempStr);
+        g2d.drawString(tempStr, x + (anchoBarra - anchoTexto) / 2, y - 5);
+
+        // Nombre de ciudad
+        g2d.setFont(new Font("Arial", Font.PLAIN, 12));
+        fm = g2d.getFontMetrics();
+        anchoTexto = fm.stringWidth(ciudad);
+        g2d.drawString(ciudad, x + (anchoBarra - anchoTexto) / 2, 520);
+
+        x += anchoBarra + espacioEntre;
+        index++;
+    }
+
+    // Línea base
+    g2d.setColor(Color.BLACK);
+    g2d.setStroke(new BasicStroke(2));
+    g2d.drawLine(margenIzq - 10, 500, 700, 500);
+}
 
     private JPanel crearPanelMaxMin(Map<String, String> datos, LocalDate fecha) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(Color.WHITE);
-        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        panel.setAlignmentX(CENTER_ALIGNMENT);
+        panel.setBackground(Color.WHITE); 
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Reducir padding vertical
 
         if (datos.containsKey("error")) {
             JLabel lblError = new JLabel(datos.get("error"));
@@ -319,14 +336,41 @@ public class IUclima extends JFrame {
             panel.add(lblError);
             return panel;
         }
+        
+        // Panel compacto para el título usando GridBagLayout para mejor control
+        JPanel titulo = new JPanel(new GridBagLayout());
+        titulo.setMaximumSize(new Dimension(600, 40)); // Limitar altura máxima
+        titulo.setPreferredSize(new Dimension(600, 40));
+        titulo.setOpaque(false);
 
-        // Título
-        JLabel titulo = new JLabel("Temperaturas Extremas - " + fecha);
-        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        JLabel lblTitulo = new JLabel("Temperaturas Extremas del Dia -> ", SwingConstants.RIGHT);
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
+        
+        JLabel lblFecha = new JLabel(fecha.toString(), SwingConstants.LEFT);
+        lblFecha.setFont(new Font("Arial", Font.BOLD, 24));
+        lblFecha.setForeground(new Color(0, 255, 0));
+        lblFecha.setToolTipText("Fecha del Calendario de `Fecha Desde:` ");
+        lblFecha.setBackground(Color.DARK_GRAY);
+        lblFecha.setBorder(BorderFactory.createLineBorder(Color.black , 4, true));
+        lblFecha.setOpaque(true);    
+
+        // Usar Grid  para alinear los componentes
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.5;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.EAST;
+        titulo.add(lblTitulo, gbc);
+
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        titulo.add(lblFecha, gbc);
+
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(titulo);
-
-        panel.add(Box.createVerticalStrut(40));
+        
+        panel.add(Box.createVerticalStrut(5)); // Reducir espacio vertical
 
         // Ciudad más calurosa
         JPanel panelCalurosa = new JPanel();
@@ -335,9 +379,10 @@ public class IUclima extends JFrame {
         panelCalurosa.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(231, 76, 60), 3),
                 BorderFactory.createEmptyBorder(20, 20, 20, 20)));
-        panelCalurosa.setMaximumSize(new Dimension(600, 120));
+        panelCalurosa.setMaximumSize(new Dimension(600, 90)); // Reducir altura
+        panelCalurosa.setPreferredSize(new Dimension(600, 90));
 
-        JLabel lblCalTitulo = new JLabel("🔥 CIUDAD MÁS CALUROSA");
+        JLabel lblCalTitulo = new JLabel("CIUDAD MÁS CALUROSA");
         lblCalTitulo.setFont(new Font("Arial", Font.BOLD, 18));
         lblCalTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -346,11 +391,11 @@ public class IUclima extends JFrame {
         lblCalInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         panelCalurosa.add(lblCalTitulo);
-        panelCalurosa.add(Box.createVerticalStrut(10));
+        panelCalurosa.add(Box.createVerticalStrut(5)); // Reducir espacio
         panelCalurosa.add(lblCalInfo);
 
         panel.add(panelCalurosa);
-        panel.add(Box.createVerticalStrut(30));
+        panel.add(Box.createVerticalStrut(15)); // Reducir espacio entre paneles
 
         // Ciudad menos calurosa
         JPanel panelFria = new JPanel();
@@ -359,9 +404,10 @@ public class IUclima extends JFrame {
         panelFria.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(52, 152, 219), 3),
                 BorderFactory.createEmptyBorder(20, 20, 20, 20)));
-        panelFria.setMaximumSize(new Dimension(600, 120));
+        panelFria.setMaximumSize(new Dimension(600, 90)); // Reducir altura
+        panelFria.setPreferredSize(new Dimension(600, 90));
 
-        JLabel lblFriaTitulo = new JLabel("❄️ CIUDAD MENOS CALUROSA");
+        JLabel lblFriaTitulo = new JLabel("CIUDAD MENOS CALUROSA");
         lblFriaTitulo.setFont(new Font("Arial", Font.BOLD, 18));
         lblFriaTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -370,7 +416,7 @@ public class IUclima extends JFrame {
         lblFriaInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         panelFria.add(lblFriaTitulo);
-        panelFria.add(Box.createVerticalStrut(10));
+        panelFria.add(Box.createVerticalStrut(5)); // Reducir espacio
         panelFria.add(lblFriaInfo);
 
         panel.add(panelFria);
